@@ -1,0 +1,7 @@
+---
+- name: 
+  hosts: all
+  become: true
+  vars:
+
+  # /fs_data/users_all/pb_backup/$(date +%Y-%m-%d_%H-%M).sql.lbz2
