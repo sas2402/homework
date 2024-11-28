@@ -1,0 +1,52 @@
+---
+- name: Настройка samba
+  hosts: u5
+  become: true
+  vars:
+    users: 
+      - user1
+      - user2
+    directories:
+      - /fs/fs_public
+      - /fs/user1_private
+      - /fs/user2_private
+
+  tasks:
+  - name: Создание группы доступа к шаре public
+    ansible.builtin.group:
+      name: fs_public
+      state: present
+
+  - name: Cоздание пользователей для шары
+    ansible.builtin.user:
+      name: "{{ item }}"
+      password: "Qazxsw23"
+      groups: fs_public
+    with_items: "{{ users }}"
+
+  - name: Создаем структуру каталогов
+    ansible.builtin.file:
+      path: "{{ item }}"
+      state: directory
+      mode: '0755'
+    with_items: "{{ directories }}"
+
+  - name: Копируем конфиг файл samba
+    ansible.builtin.copy:
+      src: ./files/smb.conf
+      dest: /etc/samba/smb.conf
+      owner: root
+      group: root
+      mode: '0644'
+    notify:
+      - Restart samba
+
+  handlers:  
+  - name: Restart samba
+    ansible.builtin.service:
+      name: smbd
+      state: restarted
+      enabled: yes
+
+
+

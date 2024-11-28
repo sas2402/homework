@@ -1,0 +1,15 @@
+---
+- name: install app
+  hosts: u5
+  become: true
+  vars:
+
+  tasks:
+  - name: Устанавить последние доступные версии docker
+    ansible.builtin.package:
+      name: 
+        - docker.io
+        - docker-compose
+        - postgresql
+        - samba
+      state: latest
