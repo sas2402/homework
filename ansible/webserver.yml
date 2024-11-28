@@ -1,6 +1,0 @@
----
-- name: ans02 web server config
-  hosts: webservers
-  become: true
-  roles:
-    - role: ./roles/nginx_config
